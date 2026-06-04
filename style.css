@@ -67,31 +67,30 @@ body::after { width: 380px; height: 380px; background: var(--secondary); opacity
 #theme-select { border: none; background: transparent; color: var(--ink); font-size: 0.9rem; font-weight: 600; cursor: pointer; outline: none; }
 #theme-select option { color: #111; }
 
-/* ===== Köşe süslemeleri ===== */
+/* ===== Köşe süslemeleri (gerçek görseller) ===== */
 .deco-item { display: none; position: fixed; z-index: 1; pointer-events: none; height: auto; }
-html[data-theme="ironman"] .im-mask-tl,
+img.deco-item { object-fit: contain; }
+html[data-theme="ironman"] .im-tl,
 html[data-theme="ironman"] .im-fly-tr,
 html[data-theme="ironman"] .im-helmet-br,
-html[data-theme="spiderman"] .sp-mask-tl,
-html[data-theme="spiderman"] .sp-hang-tr,
-html[data-theme="spiderman"] .sp-spider-bl,
+html[data-theme="spiderman"] .sp-tl,
+html[data-theme="spiderman"] .sp-cling-tr,
+html[data-theme="spiderman"] .sp-web-tl,
 html[data-theme="notebook"] .nb-pencil-tr,
 html[data-theme="notebook"] .nb-clip-tl { display: block; }
 
 /* Iron Man yerleşimi */
-.im-mask-tl { top: 24px; left: 26px; width: 120px; filter: drop-shadow(0 0 16px rgba(230,36,41,0.6)); }
-.im-fly-tr { top: 14px; right: 34px; width: 110px; transform-origin: center; animation: fly 5s ease-in-out infinite; filter: drop-shadow(0 0 18px rgba(139,233,255,0.6)); }
-.im-helmet-br { bottom: 22px; right: 26px; width: 150px; opacity: 0.92; filter: drop-shadow(0 0 18px rgba(245,197,24,0.5)); }
-.im-fly-tr .thrust { animation: flicker 0.25s infinite alternate; transform-origin: center top; }
-@keyframes fly { 0%,100% { transform: translateY(0) rotate(-4deg); } 50% { transform: translateY(-22px) rotate(4deg); } }
-@keyframes flicker { from { opacity: 0.55; transform: scaleY(0.85); } to { opacity: 1; transform: scaleY(1.15); } }
+.im-tl { top: 22px; left: 24px; width: 150px; filter: drop-shadow(0 6px 14px rgba(0,0,0,0.5)); animation: floatY 6s ease-in-out infinite; }
+.im-fly-tr { top: 18px; right: 28px; width: 210px; filter: drop-shadow(0 0 20px rgba(139,233,255,0.45)) drop-shadow(0 8px 16px rgba(0,0,0,0.5)); animation: fly 5s ease-in-out infinite; }
+.im-helmet-br { bottom: 22px; right: 26px; width: 150px; filter: drop-shadow(0 0 22px rgba(245,197,24,0.5)) drop-shadow(0 8px 16px rgba(0,0,0,0.5)); animation: floatY 5s ease-in-out infinite; }
+@keyframes fly { 0%,100% { transform: translateY(0) rotate(-3deg); } 50% { transform: translateY(-24px) rotate(3deg); } }
+@keyframes floatY { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-14px); } }
 
 /* Spider-Man yerleşimi */
-.sp-mask-tl { top: 24px; left: 26px; width: 120px; filter: drop-shadow(0 0 14px rgba(227,20,43,0.6)); }
-.sp-hang-tr { top: 0; right: 48px; width: 100px; transform-origin: top center; animation: sway 4s ease-in-out infinite; }
-.sp-spider-bl { bottom: 30px; left: 32px; width: 86px; transform-origin: top center; animation: spiderBob 3.5s ease-in-out infinite; }
-@keyframes sway { 0%,100% { transform: rotate(-5deg); } 50% { transform: rotate(5deg); } }
-@keyframes spiderBob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(14px); } }
+.sp-tl { top: 22px; left: 24px; width: 150px; filter: drop-shadow(0 6px 14px rgba(0,0,0,0.5)); animation: floatY 5.5s ease-in-out infinite; }
+.sp-cling-tr { top: 8px; right: 26px; width: 165px; transform-origin: top right; filter: drop-shadow(0 8px 16px rgba(0,0,0,0.5)); animation: sway 4s ease-in-out infinite; }
+.sp-web-tl { top: 0; left: 0; width: 150px; opacity: 0.8; }
+@keyframes sway { 0%,100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
 
 /* Not Defteri yerleşimi */
 .nb-pencil-tr { top: 18px; right: 40px; width: 42px; transform: rotate(8deg); }
