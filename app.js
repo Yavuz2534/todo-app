@@ -1,32 +1,118 @@
-// --- Supabase REST API ayarları (kütüphane gerektirmez) ---
+// --- Supabase ayarları (kütüphane gerektirmez) ---
 const SUPABASE_URL = "https://lowcsekzsnskshhayrdb.supabase.co";
 const SUPABASE_ANON_KEY =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxvd2NzZWt6c25za3NoaGF5cmRiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1OTA4NTIsImV4cCI6MjA5NjE2Njg1Mn0.sY9UATk-u1Kh5S135l_WDbLNS-6AiCo9AHiISx02V1g";
 
+const AUTH = SUPABASE_URL + "/auth/v1";
 const REST = SUPABASE_URL + "/rest/v1/todos";
-const HEADERS = {
-  apikey: SUPABASE_ANON_KEY,
-  Authorization: "Bearer " + SUPABASE_ANON_KEY,
-  "Content-Type": "application/json",
-};
 
-// Tüm istekleri saran küçük yardımcı
-async function api(method, query = "", body = null, returnData = false) {
-  const opts = { method, headers: { ...HEADERS } };
-  if (returnData) opts.headers["Prefer"] = "return=representation";
+// localStorage'da saklanan oturum
+let session = JSON.parse(localStorage.getItem("sb_session") || "null");
+
+function saveSession(s) {
+  session = s;
+  localStorage.setItem("sb_session", JSON.stringify(s));
+}
+function clearSession() {
+  session = null;
+  localStorage.removeItem("sb_session");
+}
+
+// ====================== KİMLİK DOĞRULAMA ======================
+
+async function authRequest(path, body) {
+  const res = await fetch(AUTH + path, {
+    method: "POST",
+    headers: { apikey: SUPABASE_ANON_KEY, "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+  const data = await res.json();
+  if (!res.ok) {
+    throw new Error(data.error_description || data.msg || data.message || "Hata");
+  }
+  return data;
+}
+
+async function register(email, password) {
+  const data = await authRequest("/signup", { email, password });
+  // E-posta onayı kapalı olduğundan signup doğrudan oturum döndürür
+  if (data.access_token) {
+    saveSession(data);
+    return data;
+  }
+  // Yine de oturum gelmediyse normal giriş yap
+  return login(email, password);
+}
+
+async function login(email, password) {
+  const data = await authRequest("/token?grant_type=password", { email, password });
+  saveSession(data);
+  return data;
+}
+
+// Süresi dolan access_token'ı yenile
+async function refreshSession() {
+  if (!session || !session.refresh_token) return false;
+  try {
+    const data = await authRequest("/token?grant_type=refresh_token", {
+      refresh_token: session.refresh_token,
+    });
+    saveSession(data);
+    return true;
+  } catch {
+    clearSession();
+    return false;
+  }
+}
+
+function logout() {
+  clearSession();
+  showAuthScreen();
+}
+
+// ====================== VERİ (kullanıcının görevleri) ======================
+
+async function api(method, query = "", body = null, returnData = false, retry = true) {
+  const headers = {
+    apikey: SUPABASE_ANON_KEY,
+    Authorization: "Bearer " + session.access_token, // kullanıcının JWT'si
+    "Content-Type": "application/json",
+  };
+  if (returnData) headers["Prefer"] = "return=representation";
+
+  const opts = { method, headers };
   if (body) opts.body = JSON.stringify(body);
 
   const res = await fetch(REST + query, opts);
+
+  // Token süresi dolduysa bir kez yenileyip tekrar dene
+  if (res.status === 401 && retry) {
+    const ok = await refreshSession();
+    if (ok) return api(method, query, body, returnData, false);
+    logout();
+    throw new Error("Oturum sona erdi, lütfen tekrar giriş yap");
+  }
+
   if (!res.ok) {
     const txt = await res.text();
     throw new Error("HTTP " + res.status + " — " + txt);
   }
-  // DELETE/PATCH return=minimal durumunda gövde boş olabilir
   const text = await res.text();
   return text ? JSON.parse(text) : null;
 }
 
-// --- DOM ---
+// ====================== DOM ======================
+
+const authScreen = document.getElementById("auth-screen");
+const todoScreen = document.getElementById("todo-screen");
+const authForm = document.getElementById("auth-form");
+const emailInput = document.getElementById("email");
+const passwordInput = document.getElementById("password");
+const registerBtn = document.getElementById("register-btn");
+const authMsg = document.getElementById("auth-msg");
+const userEmail = document.getElementById("user-email");
+const logoutBtn = document.getElementById("logout-btn");
+
 const form = document.getElementById("todo-form");
 const input = document.getElementById("todo-input");
 const list = document.getElementById("todo-list");
@@ -41,8 +127,27 @@ function showError(msg) {
   countEl.textContent = "⚠️ " + msg;
   console.error(msg);
 }
+function setAuthMsg(msg, type) {
+  authMsg.textContent = msg;
+  authMsg.className = "auth-msg" + (type ? " " + type : "");
+}
 
-// --- Veri çekme ---
+// ====================== EKRAN GEÇİŞLERİ ======================
+
+function showAuthScreen() {
+  authScreen.hidden = false;
+  todoScreen.hidden = true;
+}
+
+function showTodoScreen() {
+  authScreen.hidden = true;
+  todoScreen.hidden = false;
+  userEmail.textContent = session.user ? session.user.email : "";
+  load();
+}
+
+// ====================== TODO İŞLEMLERİ ======================
+
 async function load() {
   try {
     todos = await api("GET", "?select=*&order=created_at.asc");
@@ -52,7 +157,6 @@ async function load() {
   }
 }
 
-// --- Görsel ---
 function render() {
   const visible = todos.filter((t) => {
     if (filter === "active") return !t.done;
@@ -96,10 +200,9 @@ function render() {
   countEl.textContent = `${remaining} görev kaldı`;
 }
 
-// --- İşlemler ---
 async function addTodo(text) {
   try {
-    const rows = await api("POST", "", { text }, true);
+    const rows = await api("POST", "", { text }, true); // user_id otomatik (auth.uid())
     todos.push(rows[0]);
     render();
   } catch (e) {
@@ -109,12 +212,7 @@ async function addTodo(text) {
 
 async function toggle(todo) {
   try {
-    const rows = await api(
-      "PATCH",
-      "?id=eq." + todo.id,
-      { done: !todo.done },
-      true
-    );
+    const rows = await api("PATCH", "?id=eq." + todo.id, { done: !todo.done }, true);
     const i = todos.findIndex((t) => t.id === todo.id);
     if (i !== -1) todos[i] = rows[0];
     render();
@@ -143,7 +241,39 @@ async function clearDone() {
   }
 }
 
-// --- Olaylar ---
+// ====================== OLAYLAR ======================
+
+// Giriş yap (form submit)
+authForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  setAuthMsg("Giriş yapılıyor...", "");
+  try {
+    await login(emailInput.value.trim(), passwordInput.value);
+    showTodoScreen();
+  } catch (err) {
+    setAuthMsg("Giriş başarısız: " + err.message, "error");
+  }
+});
+
+// Hesap oluştur
+registerBtn.addEventListener("click", async () => {
+  const email = emailInput.value.trim();
+  const password = passwordInput.value;
+  if (!email || password.length < 6) {
+    setAuthMsg("Geçerli e-posta ve en az 6 karakter şifre gir.", "error");
+    return;
+  }
+  setAuthMsg("Hesap oluşturuluyor...", "");
+  try {
+    await register(email, password);
+    showTodoScreen();
+  } catch (err) {
+    setAuthMsg("Kayıt başarısız: " + err.message, "error");
+  }
+});
+
+logoutBtn.addEventListener("click", logout);
+
 form.addEventListener("submit", (e) => {
   e.preventDefault();
   const text = input.value.trim();
@@ -164,5 +294,10 @@ filters.addEventListener("click", (e) => {
   render();
 });
 
-// --- Başlat ---
-load();
+// ====================== BAŞLAT ======================
+// Daha önce giriş yapıldıysa doğrudan todo ekranını aç
+if (session && session.access_token) {
+  showTodoScreen();
+} else {
+  showAuthScreen();
+}

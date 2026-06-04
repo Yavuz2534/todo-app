@@ -7,16 +7,29 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <main class="app">
+  <!-- GİRİŞ / KAYIT EKRANI -->
+  <main class="app" id="auth-screen" hidden>
+    <h1>Giriş Yap</h1>
+    <form id="auth-form" class="auth-form">
+      <input type="email" id="email" placeholder="E-posta" autocomplete="username" required />
+      <input type="password" id="password" placeholder="Şifre (en az 6 karakter)" autocomplete="current-password" minlength="6" required />
+      <button type="submit" id="login-btn" class="primary-btn">Giriş Yap</button>
+      <button type="button" id="register-btn" class="ghost-btn">Hesap Oluştur</button>
+    </form>
+    <p id="auth-msg" class="auth-msg"></p>
+  </main>
+
+  <!-- TODO EKRANI -->
+  <main class="app" id="todo-screen" hidden>
+    <div class="topbar">
+      <span id="user-email" class="user-email"></span>
+      <button id="logout-btn" class="logout-btn">Çıkış</button>
+    </div>
+
     <h1>Yapılacaklar</h1>
 
     <form id="todo-form" class="todo-form">
-      <input
-        type="text"
-        id="todo-input"
-        placeholder="Yeni görev ekle..."
-        autocomplete="off"
-      />
+      <input type="text" id="todo-input" placeholder="Yeni görev ekle..." autocomplete="off" />
       <button type="submit" aria-label="Ekle">+</button>
     </form>
 
@@ -34,6 +47,6 @@
     </footer>
   </main>
 
-  <script src="app.js?v=3"></script>
+  <script src="app.js?v=4"></script>
 </body>
 </html>

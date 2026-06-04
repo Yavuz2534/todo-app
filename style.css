@@ -30,6 +30,96 @@ h1 {
   text-align: center;
 }
 
+/* --- Giriş / Kayıt --- */
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.auth-form input {
+  padding: 12px 14px;
+  border: 2px solid #e4e4ef;
+  border-radius: 10px;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.auth-form input:focus {
+  border-color: #764ba2;
+}
+
+.primary-btn,
+.ghost-btn {
+  padding: 12px;
+  border-radius: 10px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.primary-btn {
+  border: none;
+  background: #764ba2;
+  color: #fff;
+}
+
+.primary-btn:hover {
+  background: #5d3a85;
+}
+
+.ghost-btn {
+  border: 2px solid #e4e4ef;
+  background: #fff;
+  color: #764ba2;
+}
+
+.ghost-btn:hover {
+  border-color: #764ba2;
+}
+
+.auth-msg {
+  margin-top: 14px;
+  text-align: center;
+  font-size: 0.9rem;
+  min-height: 20px;
+}
+
+.auth-msg.error { color: #d05a5a; }
+.auth-msg.ok { color: #2f9e6f; }
+
+/* --- Üst bar --- */
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.user-email {
+  font-size: 0.85rem;
+  color: #888;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.logout-btn {
+  border: none;
+  background: #f0f0f7;
+  color: #764ba2;
+  padding: 6px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  flex-shrink: 0;
+}
+
+.logout-btn:hover {
+  background: #e4e4ef;
+}
+
 .todo-form {
   display: flex;
   gap: 8px;
