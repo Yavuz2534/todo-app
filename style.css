@@ -1,9 +1,13 @@
 :root {
-  --brand: #764ba2;
-  --brand-2: #667eea;
-  --brand-dark: #5d3a85;
-  --ink: #2d2d44;
-  --line: #ececf6;
+  --red: #e62429;        /* Iron Man kırmızısı */
+  --red-dark: #8e1518;
+  --gold: #f5c518;       /* altın */
+  --gold-soft: #ffd96b;
+  --arc: #8be9ff;        /* ark reaktörü mavisi */
+  --metal: #14141c;      /* koyu metal */
+  --metal-2: #1e1e2a;
+  --ink: #f3f3f7;
+  --muted: #9a9aab;
 }
 
 * {
@@ -12,12 +16,16 @@
   box-sizing: border-box;
 }
 
-/* --- Hareketli gradyan arka plan --- */
+/* --- Koyu metalik, hareketli arka plan --- */
 body {
-  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
-  background: linear-gradient(-45deg, #667eea, #764ba2, #6b8dd6, #9b59d0);
-  background-size: 400% 400%;
-  animation: gradientShift 16s ease infinite;
+  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+  color: var(--ink);
+  background:
+    radial-gradient(circle at 20% 20%, rgba(230, 36, 41, 0.25), transparent 40%),
+    radial-gradient(circle at 80% 80%, rgba(245, 197, 24, 0.18), transparent 42%),
+    linear-gradient(-45deg, #0a0a10, #1a0e10, #14141c, #20141a);
+  background-size: 100% 100%, 100% 100%, 400% 400%, 400% 400%;
+  animation: gradientShift 18s ease infinite;
   min-height: 100vh;
   display: flex;
   justify-content: center;
@@ -27,64 +35,78 @@ body {
 }
 
 @keyframes gradientShift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+  0% { background-position: 0% 50%, 0% 50%, 0% 50%, 0% 50%; }
+  50% { background-position: 0% 50%, 0% 50%, 100% 50%, 100% 50%; }
+  100% { background-position: 0% 50%, 0% 50%, 0% 50%, 0% 50%; }
 }
 
-/* Arka planda süzülen bulanık ışık baloncukları */
+/* Arka planda süzülen ark-reaktörü parıltıları */
 body::before,
 body::after {
   content: "";
   position: fixed;
   border-radius: 50%;
-  filter: blur(70px);
-  opacity: 0.5;
+  filter: blur(80px);
   z-index: 0;
   pointer-events: none;
 }
-
 body::before {
-  width: 320px;
-  height: 320px;
-  background: #ff9ce0;
-  top: -80px;
-  left: -60px;
-  animation: float1 14s ease-in-out infinite;
+  width: 340px; height: 340px;
+  background: var(--red);
+  opacity: 0.35;
+  top: -90px; left: -70px;
+  animation: float1 15s ease-in-out infinite;
 }
-
 body::after {
-  width: 380px;
-  height: 380px;
-  background: #5ad1ff;
-  bottom: -120px;
-  right: -80px;
-  animation: float2 18s ease-in-out infinite;
+  width: 380px; height: 380px;
+  background: var(--gold);
+  opacity: 0.22;
+  bottom: -120px; right: -90px;
+  animation: float2 20s ease-in-out infinite;
 }
-
 @keyframes float1 {
-  0%, 100% { transform: translate(0, 0) scale(1); }
+  0%, 100% { transform: translate(0,0) scale(1); }
   50% { transform: translate(60px, 40px) scale(1.15); }
 }
 @keyframes float2 {
-  0%, 100% { transform: translate(0, 0) scale(1); }
+  0%, 100% { transform: translate(0,0) scale(1); }
   50% { transform: translate(-50px, -30px) scale(1.1); }
 }
 
-/* --- Cam efektli kart --- */
+/* --- Metalik kart --- */
 .app {
   position: relative;
   z-index: 1;
-  background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
+  background:
+    linear-gradient(160deg, rgba(40, 22, 26, 0.96), rgba(20, 20, 28, 0.96));
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   width: 100%;
   max-width: 460px;
-  border-radius: 22px;
-  border: 1px solid rgba(255, 255, 255, 0.6);
-  box-shadow: 0 24px 60px rgba(40, 20, 70, 0.35);
-  padding: 30px;
+  border-radius: 20px;
+  border: 1px solid rgba(245, 197, 24, 0.35);
+  box-shadow:
+    0 24px 60px rgba(0, 0, 0, 0.6),
+    inset 0 1px 0 rgba(245, 197, 24, 0.18),
+    0 0 30px rgba(230, 36, 41, 0.2);
+  padding: 32px 30px;
   animation: popIn 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Üstte kırmızı-altın enerji şeridi */
+.app::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 12%; right: 12%;
+  height: 3px;
+  border-radius: 3px;
+  background: linear-gradient(90deg, transparent, var(--red), var(--gold), var(--red), transparent);
+  box-shadow: 0 0 14px var(--red);
+  animation: pulseBar 3s ease-in-out infinite;
+}
+@keyframes pulseBar {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
 }
 
 @keyframes popIn {
@@ -92,16 +114,35 @@ body::after {
   to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
+/* --- Başlık + ark reaktörü parıltısı --- */
 h1 {
-  font-size: 1.75rem;
+  position: relative;
+  font-size: 1.7rem;
   font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 2px;
   margin-bottom: 22px;
   text-align: center;
-  background: linear-gradient(90deg, var(--brand-2), var(--brand));
+  background: linear-gradient(90deg, var(--gold), #fff6cc, var(--gold));
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  letter-spacing: -0.5px;
+  text-shadow: 0 0 18px rgba(245, 197, 24, 0.35);
+}
+h1::after {
+  content: "";
+  position: absolute;
+  left: 50%; top: -10px;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--arc);
+  transform: translateX(-50%);
+  box-shadow: 0 0 12px 4px var(--arc), 0 0 24px 8px rgba(139, 233, 255, 0.5);
+  animation: arcPulse 2s ease-in-out infinite;
+}
+@keyframes arcPulse {
+  0%, 100% { opacity: 0.7; transform: translateX(-50%) scale(1); }
+  50% { opacity: 1; transform: translateX(-50%) scale(1.4); }
 }
 
 /* --- Giriş / Kayıt --- */
@@ -110,19 +151,23 @@ h1 {
   flex-direction: column;
   gap: 12px;
 }
-
-.auth-form input {
+.auth-form input,
+#todo-input {
   padding: 13px 15px;
-  border: 2px solid var(--line);
+  border: 1px solid rgba(245, 197, 24, 0.3);
+  background: rgba(0, 0, 0, 0.3);
+  color: var(--ink);
   border-radius: 12px;
   font-size: 1rem;
   outline: none;
-  transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
-
-.auth-form input:focus {
-  border-color: var(--brand);
-  box-shadow: 0 0 0 4px rgba(118, 75, 162, 0.15);
+.auth-form input::placeholder,
+#todo-input::placeholder { color: #7a7a8a; }
+.auth-form input:focus,
+#todo-input:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(245, 197, 24, 0.2), 0 0 14px rgba(230, 36, 41, 0.3);
 }
 
 .primary-btn,
@@ -130,27 +175,27 @@ h1 {
   padding: 13px;
   border-radius: 12px;
   font-size: 1rem;
-  font-weight: 600;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
   cursor: pointer;
   transition: transform 0.15s, box-shadow 0.2s, background 0.2s;
 }
-
 .primary-btn {
   border: none;
-  background: linear-gradient(135deg, var(--brand-2), var(--brand));
+  background: linear-gradient(135deg, var(--red), var(--red-dark));
   color: #fff;
-  box-shadow: 0 8px 20px rgba(118, 75, 162, 0.35);
+  box-shadow: 0 8px 20px rgba(230, 36, 41, 0.4), inset 0 1px 0 rgba(255,255,255,0.2);
 }
-
-.primary-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 26px rgba(118, 75, 162, 0.45); }
+.primary-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(230, 36, 41, 0.55); }
 .primary-btn:active { transform: translateY(0) scale(0.98); }
 
 .ghost-btn {
-  border: 2px solid var(--line);
-  background: #fff;
-  color: var(--brand);
+  border: 1px solid var(--gold);
+  background: transparent;
+  color: var(--gold);
 }
-.ghost-btn:hover { border-color: var(--brand); transform: translateY(-2px); }
+.ghost-btn:hover { background: rgba(245, 197, 24, 0.12); transform: translateY(-2px); box-shadow: 0 0 16px rgba(245,197,24,0.3); }
 .ghost-btn:active { transform: translateY(0) scale(0.98); }
 
 .auth-msg {
@@ -160,38 +205,36 @@ h1 {
   min-height: 20px;
   animation: fade 0.3s ease;
 }
-.auth-msg.error { color: #d05a5a; }
-.auth-msg.ok { color: #2f9e6f; }
+.auth-msg.error { color: #ff6b6b; }
+.auth-msg.ok { color: #7bffb0; }
 
 /* --- Üst bar --- */
 .topbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 }
-
 .user-email {
-  font-size: 0.85rem;
-  color: #888;
+  font-size: 0.8rem;
+  color: var(--muted);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-
 .logout-btn {
-  border: none;
-  background: #f0f0f7;
-  color: var(--brand);
+  border: 1px solid rgba(230, 36, 41, 0.5);
+  background: rgba(230, 36, 41, 0.12);
+  color: #ff9b9b;
   padding: 7px 14px;
   border-radius: 20px;
   cursor: pointer;
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   font-weight: 600;
   flex-shrink: 0;
   transition: background 0.2s, transform 0.15s;
 }
-.logout-btn:hover { background: #e4e4ef; transform: translateY(-1px); }
+.logout-btn:hover { background: rgba(230, 36, 41, 0.25); transform: translateY(-1px); }
 
 /* --- Görev ekleme --- */
 .todo-form {
@@ -199,63 +242,53 @@ h1 {
   gap: 10px;
   margin-bottom: 18px;
 }
-
-#todo-input {
-  flex: 1;
-  padding: 13px 15px;
-  border: 2px solid var(--line);
-  border-radius: 12px;
-  font-size: 1rem;
-  outline: none;
-  transition: border-color 0.2s, box-shadow 0.2s;
-}
-#todo-input:focus {
-  border-color: var(--brand);
-  box-shadow: 0 0 0 4px rgba(118, 75, 162, 0.15);
-}
+#todo-input { flex: 1; }
 
 .todo-form button {
   width: 50px;
   border: none;
-  border-radius: 12px;
-  background: linear-gradient(135deg, var(--brand-2), var(--brand));
-  color: #fff;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 40%, #cfeffc, var(--arc) 45%, #2b8fb5 75%);
+  color: #042733;
   font-size: 1.6rem;
+  font-weight: 700;
   line-height: 1;
   cursor: pointer;
-  box-shadow: 0 8px 18px rgba(118, 75, 162, 0.35);
+  box-shadow: 0 0 14px var(--arc), 0 0 26px rgba(139, 233, 255, 0.5);
   transition: transform 0.15s, box-shadow 0.2s;
 }
-.todo-form button:hover { transform: translateY(-2px) rotate(90deg); box-shadow: 0 12px 24px rgba(118, 75, 162, 0.45); }
-.todo-form button:active { transform: scale(0.92); }
+.todo-form button:hover { transform: translateY(-2px) rotate(90deg); box-shadow: 0 0 20px var(--arc), 0 0 40px rgba(139, 233, 255, 0.7); }
+.todo-form button:active { transform: scale(0.9); }
 
 /* --- Filtreler --- */
 .filters {
   display: flex;
   gap: 6px;
   margin-bottom: 16px;
-  background: #f3f3fa;
+  background: rgba(0, 0, 0, 0.3);
   padding: 5px;
   border-radius: 12px;
+  border: 1px solid rgba(245, 197, 24, 0.15);
 }
-
 .filter-btn {
   flex: 1;
   padding: 9px;
   border: none;
   background: transparent;
-  color: #777;
+  color: var(--muted);
   border-radius: 9px;
   cursor: pointer;
-  font-size: 0.85rem;
-  font-weight: 600;
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
   transition: all 0.25s;
 }
-.filter-btn:hover { color: var(--brand); }
+.filter-btn:hover { color: var(--gold); }
 .filter-btn.active {
-  background: #fff;
-  color: var(--brand);
-  box-shadow: 0 3px 10px rgba(118, 75, 162, 0.18);
+  background: linear-gradient(135deg, var(--red), var(--red-dark));
+  color: #fff;
+  box-shadow: 0 0 14px rgba(230, 36, 41, 0.5);
 }
 
 /* --- Liste --- */
@@ -263,24 +296,24 @@ h1 {
   list-style: none;
   margin-bottom: 18px;
 }
-
 .todo-item {
   display: flex;
   align-items: center;
   gap: 12px;
   padding: 13px 12px;
-  margin-bottom: 6px;
+  margin-bottom: 7px;
   border-radius: 12px;
-  background: #fff;
-  border: 1px solid var(--line);
+  background: rgba(0, 0, 0, 0.28);
+  border: 1px solid rgba(245, 197, 24, 0.14);
+  border-left: 3px solid var(--red);
   animation: slideIn 0.35s cubic-bezier(0.22, 1, 0.36, 1);
-  transition: transform 0.18s, box-shadow 0.2s;
+  transition: transform 0.18s, box-shadow 0.2s, border-color 0.2s;
 }
 .todo-item:hover {
   transform: translateX(4px);
-  box-shadow: 0 6px 16px rgba(40, 20, 70, 0.12);
+  border-left-color: var(--gold);
+  box-shadow: 0 6px 18px rgba(230, 36, 41, 0.25);
 }
-
 @keyframes slideIn {
   from { opacity: 0; transform: translateX(-16px); }
   to { opacity: 1; transform: translateX(0); }
@@ -293,7 +326,7 @@ h1 {
 .todo-item input[type="checkbox"] {
   width: 22px;
   height: 22px;
-  accent-color: var(--brand);
+  accent-color: var(--red);
   cursor: pointer;
   flex-shrink: 0;
   transition: transform 0.15s;
@@ -306,30 +339,30 @@ h1 {
   word-break: break-word;
   transition: color 0.3s;
 }
-
 .todo-item.done {
-  background: #fafaff;
+  border-left-color: var(--gold);
+  background: rgba(245, 197, 24, 0.06);
 }
 .todo-item.done .text {
   text-decoration: line-through;
-  color: #b3b3c2;
+  color: #6f6f80;
 }
 
 .todo-item .delete {
   border: none;
   background: transparent;
-  color: #d05a5a;
+  color: var(--red);
   font-size: 1.35rem;
   line-height: 1;
   cursor: pointer;
-  opacity: 0.55;
-  transition: opacity 0.2s, transform 0.2s;
+  opacity: 0.65;
+  transition: opacity 0.2s, transform 0.2s, text-shadow 0.2s;
 }
-.todo-item .delete:hover { opacity: 1; transform: rotate(90deg) scale(1.2); }
+.todo-item .delete:hover { opacity: 1; transform: rotate(90deg) scale(1.2); text-shadow: 0 0 10px var(--red); }
 
 .empty {
   text-align: center;
-  color: #bbb;
+  color: var(--muted);
   padding: 28px 0;
   animation: fade 0.4s ease;
 }
@@ -339,19 +372,18 @@ h1 {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 0.85rem;
-  color: #888;
-  padding-top: 4px;
-  border-top: 1px solid var(--line);
+  font-size: 0.82rem;
+  color: var(--muted);
+  padding-top: 12px;
+  border-top: 1px solid rgba(245, 197, 24, 0.18);
 }
-
 .clear-btn {
   border: none;
   background: transparent;
-  color: var(--brand);
+  color: var(--gold);
   cursor: pointer;
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   font-weight: 600;
-  transition: color 0.2s;
+  transition: color 0.2s, text-shadow 0.2s;
 }
-.clear-btn:hover { color: var(--brand-dark); text-decoration: underline; }
+.clear-btn:hover { color: var(--gold-soft); text-shadow: 0 0 10px rgba(245, 197, 24, 0.5); }
