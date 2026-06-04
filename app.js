@@ -120,6 +120,16 @@ const countEl = document.getElementById("count");
 const clearBtn = document.getElementById("clear-done");
 const filters = document.getElementById("filters");
 
+// --- Tema seçici ---
+const themeSelect = document.getElementById("theme-select");
+function applyTheme(t) {
+  document.documentElement.dataset.theme = t;
+  localStorage.setItem("theme", t);
+  themeSelect.value = t;
+}
+themeSelect.addEventListener("change", () => applyTheme(themeSelect.value));
+applyTheme(localStorage.getItem("theme") || "ironman");
+
 let todos = [];
 let filter = "all";
 

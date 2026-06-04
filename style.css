@@ -1,11 +1,29 @@
+/* ===== Tema değişkenleri ===== */
+html[data-theme="ironman"] {
+  --primary: #e62429;
+  --primary-dark: #8e1518;
+  --secondary: #f5c518;
+  --secondary-soft: #ffd96b;
+  --accent: #8be9ff;
+  --bg-a: rgba(230, 36, 41, 0.25);
+  --bg-b: rgba(245, 197, 24, 0.18);
+  --bg-grad: linear-gradient(-45deg, #0a0a10, #1a0e10, #14141c, #20141a);
+  --card-grad: linear-gradient(160deg, rgba(40, 22, 26, 0.96), rgba(20, 20, 28, 0.96));
+}
+
+html[data-theme="spiderman"] {
+  --primary: #e3142b;
+  --primary-dark: #9e0f1f;
+  --secondary: #2b6fe0;
+  --secondary-soft: #6fa0ff;
+  --accent: #ffffff;
+  --bg-a: rgba(227, 20, 43, 0.25);
+  --bg-b: rgba(43, 111, 224, 0.22);
+  --bg-grad: linear-gradient(-45deg, #0a0a14, #10131f, #0c1020, #1a1020);
+  --card-grad: linear-gradient(160deg, rgba(30, 22, 40, 0.96), rgba(16, 18, 30, 0.96));
+}
+
 :root {
-  --red: #e62429;        /* Iron Man kırmızısı */
-  --red-dark: #8e1518;
-  --gold: #f5c518;       /* altın */
-  --gold-soft: #ffd96b;
-  --arc: #8be9ff;        /* ark reaktörü mavisi */
-  --metal: #14141c;      /* koyu metal */
-  --metal-2: #1e1e2a;
   --ink: #f3f3f7;
   --muted: #9a9aab;
 }
@@ -16,15 +34,15 @@
   box-sizing: border-box;
 }
 
-/* --- Koyu metalik, hareketli arka plan --- */
+/* ===== Hareketli arka plan ===== */
 body {
   font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
   color: var(--ink);
   background:
-    radial-gradient(circle at 20% 20%, rgba(230, 36, 41, 0.25), transparent 40%),
-    radial-gradient(circle at 80% 80%, rgba(245, 197, 24, 0.18), transparent 42%),
-    linear-gradient(-45deg, #0a0a10, #1a0e10, #14141c, #20141a);
-  background-size: 100% 100%, 100% 100%, 400% 400%, 400% 400%;
+    radial-gradient(circle at 20% 20%, var(--bg-a), transparent 40%),
+    radial-gradient(circle at 80% 80%, var(--bg-b), transparent 42%),
+    var(--bg-grad);
+  background-size: 100% 100%, 100% 100%, 400% 400%;
   animation: gradientShift 18s ease infinite;
   min-height: 100vh;
   display: flex;
@@ -32,15 +50,15 @@ body {
   align-items: flex-start;
   padding: 48px 16px;
   overflow-x: hidden;
+  transition: background-color 0.4s;
 }
 
 @keyframes gradientShift {
-  0% { background-position: 0% 50%, 0% 50%, 0% 50%, 0% 50%; }
-  50% { background-position: 0% 50%, 0% 50%, 100% 50%, 100% 50%; }
-  100% { background-position: 0% 50%, 0% 50%, 0% 50%, 0% 50%; }
+  0% { background-position: 0% 50%, 0% 50%, 0% 50%; }
+  50% { background-position: 0% 50%, 0% 50%, 100% 50%; }
+  100% { background-position: 0% 50%, 0% 50%, 0% 50%; }
 }
 
-/* Arka planda süzülen ark-reaktörü parıltıları */
 body::before,
 body::after {
   content: "";
@@ -52,14 +70,14 @@ body::after {
 }
 body::before {
   width: 340px; height: 340px;
-  background: var(--red);
+  background: var(--primary);
   opacity: 0.35;
   top: -90px; left: -70px;
   animation: float1 15s ease-in-out infinite;
 }
 body::after {
   width: 380px; height: 380px;
-  background: var(--gold);
+  background: var(--secondary);
   opacity: 0.22;
   bottom: -120px; right: -90px;
   animation: float2 20s ease-in-out infinite;
@@ -73,48 +91,108 @@ body::after {
   50% { transform: translate(-50px, -30px) scale(1.1); }
 }
 
-/* --- Metalik kart --- */
+/* ===== Tema seçici ===== */
+.theme-switcher {
+  position: fixed;
+  top: 18px;
+  right: 18px;
+  z-index: 6;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid var(--secondary);
+  border-radius: 30px;
+  padding: 7px 12px;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 0 16px rgba(0, 0, 0, 0.4);
+}
+.theme-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: var(--secondary);
+}
+#theme-select {
+  border: none;
+  background: transparent;
+  color: var(--ink);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  outline: none;
+}
+#theme-select option { color: #111; }
+
+/* ===== Karakter (sol boşluk) ===== */
+.character {
+  position: fixed;
+  left: 4%;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1;
+  width: min(280px, 22vw);
+  pointer-events: none;
+  animation: floatChar 6s ease-in-out infinite;
+}
+.char {
+  display: none;
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 0 26px rgba(0, 0, 0, 0.6))
+          drop-shadow(0 0 18px var(--primary));
+}
+html[data-theme="ironman"] .char-ironman { display: block; }
+html[data-theme="spiderman"] .char-spiderman { display: block; }
+
+@keyframes floatChar {
+  0%, 100% { transform: translateY(-50%); }
+  50% { transform: translateY(calc(-50% - 14px)); }
+}
+
+/* Dar ekranda karaktere yer yok → gizle */
+@media (max-width: 1024px) {
+  .character { display: none; }
+}
+
+/* ===== Kart ===== */
 .app {
   position: relative;
-  z-index: 1;
-  background:
-    linear-gradient(160deg, rgba(40, 22, 26, 0.96), rgba(20, 20, 28, 0.96));
+  z-index: 2;
+  background: var(--card-grad);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   width: 100%;
   max-width: 460px;
   border-radius: 20px;
-  border: 1px solid rgba(245, 197, 24, 0.35);
+  border: 1px solid color-mix(in srgb, var(--secondary) 35%, transparent);
   box-shadow:
     0 24px 60px rgba(0, 0, 0, 0.6),
-    inset 0 1px 0 rgba(245, 197, 24, 0.18),
-    0 0 30px rgba(230, 36, 41, 0.2);
+    inset 0 1px 0 color-mix(in srgb, var(--secondary) 18%, transparent),
+    0 0 30px color-mix(in srgb, var(--primary) 20%, transparent);
   padding: 32px 30px;
   animation: popIn 0.5s cubic-bezier(0.22, 1, 0.36, 1);
 }
-
-/* Üstte kırmızı-altın enerji şeridi */
 .app::before {
   content: "";
   position: absolute;
   top: 0; left: 12%; right: 12%;
   height: 3px;
   border-radius: 3px;
-  background: linear-gradient(90deg, transparent, var(--red), var(--gold), var(--red), transparent);
-  box-shadow: 0 0 14px var(--red);
+  background: linear-gradient(90deg, transparent, var(--primary), var(--secondary), var(--primary), transparent);
+  box-shadow: 0 0 14px var(--primary);
   animation: pulseBar 3s ease-in-out infinite;
 }
 @keyframes pulseBar {
   0%, 100% { opacity: 0.6; }
   50% { opacity: 1; }
 }
-
 @keyframes popIn {
   from { opacity: 0; transform: translateY(24px) scale(0.97); }
   to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
-/* --- Başlık + ark reaktörü parıltısı --- */
+/* ===== Başlık + parıltı ===== */
 h1 {
   position: relative;
   font-size: 1.7rem;
@@ -123,11 +201,11 @@ h1 {
   letter-spacing: 2px;
   margin-bottom: 22px;
   text-align: center;
-  background: linear-gradient(90deg, var(--gold), #fff6cc, var(--gold));
+  background: linear-gradient(90deg, var(--secondary), #fff6cc, var(--secondary));
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  text-shadow: 0 0 18px rgba(245, 197, 24, 0.35);
+  text-shadow: 0 0 18px color-mix(in srgb, var(--secondary) 35%, transparent);
 }
 h1::after {
   content: "";
@@ -135,9 +213,9 @@ h1::after {
   left: 50%; top: -10px;
   width: 8px; height: 8px;
   border-radius: 50%;
-  background: var(--arc);
+  background: var(--accent);
   transform: translateX(-50%);
-  box-shadow: 0 0 12px 4px var(--arc), 0 0 24px 8px rgba(139, 233, 255, 0.5);
+  box-shadow: 0 0 12px 4px var(--accent), 0 0 24px 8px color-mix(in srgb, var(--accent) 50%, transparent);
   animation: arcPulse 2s ease-in-out infinite;
 }
 @keyframes arcPulse {
@@ -145,7 +223,7 @@ h1::after {
   50% { opacity: 1; transform: translateX(-50%) scale(1.4); }
 }
 
-/* --- Giriş / Kayıt --- */
+/* ===== Giriş / Kayıt ===== */
 .auth-form {
   display: flex;
   flex-direction: column;
@@ -154,7 +232,7 @@ h1::after {
 .auth-form input,
 #todo-input {
   padding: 13px 15px;
-  border: 1px solid rgba(245, 197, 24, 0.3);
+  border: 1px solid color-mix(in srgb, var(--secondary) 30%, transparent);
   background: rgba(0, 0, 0, 0.3);
   color: var(--ink);
   border-radius: 12px;
@@ -166,8 +244,9 @@ h1::after {
 #todo-input::placeholder { color: #7a7a8a; }
 .auth-form input:focus,
 #todo-input:focus {
-  border-color: var(--gold);
-  box-shadow: 0 0 0 3px rgba(245, 197, 24, 0.2), 0 0 14px rgba(230, 36, 41, 0.3);
+  border-color: var(--secondary);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--secondary) 20%, transparent),
+              0 0 14px color-mix(in srgb, var(--primary) 30%, transparent);
 }
 
 .primary-btn,
@@ -183,19 +262,19 @@ h1::after {
 }
 .primary-btn {
   border: none;
-  background: linear-gradient(135deg, var(--red), var(--red-dark));
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
   color: #fff;
-  box-shadow: 0 8px 20px rgba(230, 36, 41, 0.4), inset 0 1px 0 rgba(255,255,255,0.2);
+  box-shadow: 0 8px 20px color-mix(in srgb, var(--primary) 40%, transparent), inset 0 1px 0 rgba(255,255,255,0.2);
 }
-.primary-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(230, 36, 41, 0.55); }
+.primary-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 28px color-mix(in srgb, var(--primary) 55%, transparent); }
 .primary-btn:active { transform: translateY(0) scale(0.98); }
 
 .ghost-btn {
-  border: 1px solid var(--gold);
+  border: 1px solid var(--secondary);
   background: transparent;
-  color: var(--gold);
+  color: var(--secondary);
 }
-.ghost-btn:hover { background: rgba(245, 197, 24, 0.12); transform: translateY(-2px); box-shadow: 0 0 16px rgba(245,197,24,0.3); }
+.ghost-btn:hover { background: color-mix(in srgb, var(--secondary) 12%, transparent); transform: translateY(-2px); box-shadow: 0 0 16px color-mix(in srgb, var(--secondary) 30%, transparent); }
 .ghost-btn:active { transform: translateY(0) scale(0.98); }
 
 .auth-msg {
@@ -208,7 +287,7 @@ h1::after {
 .auth-msg.error { color: #ff6b6b; }
 .auth-msg.ok { color: #7bffb0; }
 
-/* --- Üst bar --- */
+/* ===== Üst bar ===== */
 .topbar {
   display: flex;
   justify-content: space-between;
@@ -223,8 +302,8 @@ h1::after {
   white-space: nowrap;
 }
 .logout-btn {
-  border: 1px solid rgba(230, 36, 41, 0.5);
-  background: rgba(230, 36, 41, 0.12);
+  border: 1px solid color-mix(in srgb, var(--primary) 50%, transparent);
+  background: color-mix(in srgb, var(--primary) 12%, transparent);
   color: #ff9b9b;
   padding: 7px 14px;
   border-radius: 20px;
@@ -234,9 +313,9 @@ h1::after {
   flex-shrink: 0;
   transition: background 0.2s, transform 0.15s;
 }
-.logout-btn:hover { background: rgba(230, 36, 41, 0.25); transform: translateY(-1px); }
+.logout-btn:hover { background: color-mix(in srgb, var(--primary) 25%, transparent); transform: translateY(-1px); }
 
-/* --- Görev ekleme --- */
+/* ===== Görev ekleme ===== */
 .todo-form {
   display: flex;
   gap: 10px;
@@ -248,19 +327,19 @@ h1::after {
   width: 50px;
   border: none;
   border-radius: 50%;
-  background: radial-gradient(circle at 50% 40%, #cfeffc, var(--arc) 45%, #2b8fb5 75%);
+  background: radial-gradient(circle at 50% 40%, #cfeffc, var(--accent) 45%, color-mix(in srgb, var(--accent) 60%, #2b8fb5) 75%);
   color: #042733;
   font-size: 1.6rem;
   font-weight: 700;
   line-height: 1;
   cursor: pointer;
-  box-shadow: 0 0 14px var(--arc), 0 0 26px rgba(139, 233, 255, 0.5);
+  box-shadow: 0 0 14px var(--accent), 0 0 26px color-mix(in srgb, var(--accent) 50%, transparent);
   transition: transform 0.15s, box-shadow 0.2s;
 }
-.todo-form button:hover { transform: translateY(-2px) rotate(90deg); box-shadow: 0 0 20px var(--arc), 0 0 40px rgba(139, 233, 255, 0.7); }
+.todo-form button:hover { transform: translateY(-2px) rotate(90deg); box-shadow: 0 0 20px var(--accent), 0 0 40px color-mix(in srgb, var(--accent) 70%, transparent); }
 .todo-form button:active { transform: scale(0.9); }
 
-/* --- Filtreler --- */
+/* ===== Filtreler ===== */
 .filters {
   display: flex;
   gap: 6px;
@@ -268,7 +347,7 @@ h1::after {
   background: rgba(0, 0, 0, 0.3);
   padding: 5px;
   border-radius: 12px;
-  border: 1px solid rgba(245, 197, 24, 0.15);
+  border: 1px solid color-mix(in srgb, var(--secondary) 15%, transparent);
 }
 .filter-btn {
   flex: 1;
@@ -284,14 +363,14 @@ h1::after {
   letter-spacing: 0.5px;
   transition: all 0.25s;
 }
-.filter-btn:hover { color: var(--gold); }
+.filter-btn:hover { color: var(--secondary); }
 .filter-btn.active {
-  background: linear-gradient(135deg, var(--red), var(--red-dark));
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
   color: #fff;
-  box-shadow: 0 0 14px rgba(230, 36, 41, 0.5);
+  box-shadow: 0 0 14px color-mix(in srgb, var(--primary) 50%, transparent);
 }
 
-/* --- Liste --- */
+/* ===== Liste ===== */
 .todo-list {
   list-style: none;
   margin-bottom: 18px;
@@ -304,15 +383,15 @@ h1::after {
   margin-bottom: 7px;
   border-radius: 12px;
   background: rgba(0, 0, 0, 0.28);
-  border: 1px solid rgba(245, 197, 24, 0.14);
-  border-left: 3px solid var(--red);
+  border: 1px solid color-mix(in srgb, var(--secondary) 14%, transparent);
+  border-left: 3px solid var(--primary);
   animation: slideIn 0.35s cubic-bezier(0.22, 1, 0.36, 1);
   transition: transform 0.18s, box-shadow 0.2s, border-color 0.2s;
 }
 .todo-item:hover {
   transform: translateX(4px);
-  border-left-color: var(--gold);
-  box-shadow: 0 6px 18px rgba(230, 36, 41, 0.25);
+  border-left-color: var(--secondary);
+  box-shadow: 0 6px 18px color-mix(in srgb, var(--primary) 25%, transparent);
 }
 @keyframes slideIn {
   from { opacity: 0; transform: translateX(-16px); }
@@ -326,7 +405,7 @@ h1::after {
 .todo-item input[type="checkbox"] {
   width: 22px;
   height: 22px;
-  accent-color: var(--red);
+  accent-color: var(--primary);
   cursor: pointer;
   flex-shrink: 0;
   transition: transform 0.15s;
@@ -340,8 +419,8 @@ h1::after {
   transition: color 0.3s;
 }
 .todo-item.done {
-  border-left-color: var(--gold);
-  background: rgba(245, 197, 24, 0.06);
+  border-left-color: var(--secondary);
+  background: color-mix(in srgb, var(--secondary) 6%, transparent);
 }
 .todo-item.done .text {
   text-decoration: line-through;
@@ -351,14 +430,14 @@ h1::after {
 .todo-item .delete {
   border: none;
   background: transparent;
-  color: var(--red);
+  color: var(--primary);
   font-size: 1.35rem;
   line-height: 1;
   cursor: pointer;
   opacity: 0.65;
   transition: opacity 0.2s, transform 0.2s, text-shadow 0.2s;
 }
-.todo-item .delete:hover { opacity: 1; transform: rotate(90deg) scale(1.2); text-shadow: 0 0 10px var(--red); }
+.todo-item .delete:hover { opacity: 1; transform: rotate(90deg) scale(1.2); text-shadow: 0 0 10px var(--primary); }
 
 .empty {
   text-align: center;
@@ -367,7 +446,7 @@ h1::after {
   animation: fade 0.4s ease;
 }
 
-/* --- Alt bar --- */
+/* ===== Alt bar ===== */
 .footer {
   display: flex;
   justify-content: space-between;
@@ -375,15 +454,15 @@ h1::after {
   font-size: 0.82rem;
   color: var(--muted);
   padding-top: 12px;
-  border-top: 1px solid rgba(245, 197, 24, 0.18);
+  border-top: 1px solid color-mix(in srgb, var(--secondary) 18%, transparent);
 }
 .clear-btn {
   border: none;
   background: transparent;
-  color: var(--gold);
+  color: var(--secondary);
   cursor: pointer;
   font-size: 0.82rem;
   font-weight: 600;
   transition: color 0.2s, text-shadow 0.2s;
 }
-.clear-btn:hover { color: var(--gold-soft); text-shadow: 0 0 10px rgba(245, 197, 24, 0.5); }
+.clear-btn:hover { color: var(--secondary-soft); text-shadow: 0 0 10px color-mix(in srgb, var(--secondary) 50%, transparent); }

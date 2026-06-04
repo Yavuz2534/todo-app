@@ -4,9 +4,84 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Yapılacaklar Listesi</title>
-  <link rel="stylesheet" href="style.css?v=3" />
+  <!-- Tema flaşını önlemek için sayfa boyanmadan temayı uygula -->
+  <script>
+    document.documentElement.dataset.theme =
+      localStorage.getItem("theme") || "ironman";
+  </script>
+  <link rel="stylesheet" href="style.css?v=4" />
 </head>
 <body>
+  <!-- TEMA SEÇİCİ -->
+  <div class="theme-switcher">
+    <span class="theme-label">TEMA</span>
+    <select id="theme-select" aria-label="Tema seç">
+      <option value="ironman">Iron Man</option>
+      <option value="spiderman">Spider-Man</option>
+    </select>
+  </div>
+
+  <!-- KARAKTER (sol boşluk) -->
+  <div class="character" aria-hidden="true">
+    <!-- Iron Man kaskı -->
+    <svg class="char char-ironman" viewBox="0 0 200 280" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="im-gold" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#ffe27a" />
+          <stop offset="0.5" stop-color="#f5c518" />
+          <stop offset="1" stop-color="#c9930a" />
+        </linearGradient>
+        <linearGradient id="im-red" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#e62429" />
+          <stop offset="1" stop-color="#8e1518" />
+        </linearGradient>
+        <radialGradient id="im-eye" cx="0.5" cy="0.5" r="0.6">
+          <stop offset="0" stop-color="#ffffff" />
+          <stop offset="0.6" stop-color="#bfefff" />
+          <stop offset="1" stop-color="#5ad1ff" />
+        </radialGradient>
+      </defs>
+      <path d="M100 10 C152 10 178 52 178 116 C178 182 150 244 100 268 C50 244 22 182 22 116 C22 52 48 10 100 10 Z" fill="url(#im-red)" />
+      <path d="M100 30 C140 30 156 70 156 120 C156 175 134 222 100 244 C66 222 44 175 44 120 C44 70 60 30 100 30 Z" fill="url(#im-gold)" />
+      <path d="M100 10 C112 10 122 14 130 22 L116 64 C110 60 100 60 100 60 C100 60 90 60 84 64 L70 22 C78 14 88 10 100 10 Z" fill="url(#im-red)" />
+      <path d="M96 70 L104 70 L102 150 L98 150 Z" fill="#d9a512" />
+      <path d="M58 120 L92 108 L92 134 L62 142 Z" fill="url(#im-eye)" />
+      <path d="M142 120 L108 108 L108 134 L138 142 Z" fill="url(#im-eye)" />
+      <g stroke="#b8870a" stroke-width="3" stroke-linecap="round">
+        <line x1="84" y1="196" x2="116" y2="196" />
+        <line x1="86" y1="206" x2="114" y2="206" />
+        <line x1="90" y1="216" x2="110" y2="216" />
+      </g>
+    </svg>
+
+    <!-- Spider-Man maskesi -->
+    <svg class="char char-spiderman" viewBox="0 0 200 280" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="sp-red" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#e3142b" />
+          <stop offset="1" stop-color="#9e0f1f" />
+        </linearGradient>
+      </defs>
+      <path d="M100 10 C156 10 182 56 182 122 C182 190 148 250 100 270 C52 250 18 190 18 122 C18 56 44 10 100 10 Z" fill="url(#sp-red)" />
+      <g stroke="#6e0c16" stroke-width="1.4" fill="none" opacity="0.75" stroke-linecap="round">
+        <line x1="100" y1="6" x2="100" y2="270" />
+        <line x1="100" y1="20" x2="30" y2="120" />
+        <line x1="100" y1="20" x2="170" y2="120" />
+        <line x1="100" y1="20" x2="40" y2="210" />
+        <line x1="100" y1="20" x2="160" y2="210" />
+        <line x1="100" y1="20" x2="70" y2="255" />
+        <line x1="100" y1="20" x2="130" y2="255" />
+        <path d="M40 70 Q100 40 160 70" />
+        <path d="M30 120 Q100 80 170 120" />
+        <path d="M30 170 Q100 130 170 170" />
+        <path d="M40 215 Q100 180 160 215" />
+        <path d="M60 250 Q100 225 140 250" />
+      </g>
+      <path d="M84 112 C70 102 44 106 38 126 C34 140 52 152 70 148 C86 144 92 124 84 112 Z" fill="#fff" stroke="#111" stroke-width="3" />
+      <path d="M116 112 C130 102 156 106 162 126 C166 140 148 152 130 148 C114 144 108 124 116 112 Z" fill="#fff" stroke="#111" stroke-width="3" />
+    </svg>
+  </div>
+
   <!-- GİRİŞ / KAYIT EKRANI -->
   <main class="app" id="auth-screen" hidden>
     <h1>Giriş Yap</h1>
@@ -47,6 +122,6 @@
     </footer>
   </main>
 
-  <script src="app.js?v=4"></script>
+  <script src="app.js?v=5"></script>
 </body>
 </html>
