@@ -4,12 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Yapılacaklar Listesi</title>
-  <!-- Tema flaşını önlemek için sayfa boyanmadan temayı uygula -->
   <script>
     document.documentElement.dataset.theme =
       localStorage.getItem("theme") || "ironman";
   </script>
-  <link rel="stylesheet" href="style.css?v=4" />
+  <link rel="stylesheet" href="style.css?v=5" />
 </head>
 <body>
   <!-- TEMA SEÇİCİ -->
@@ -18,27 +17,24 @@
     <select id="theme-select" aria-label="Tema seç">
       <option value="ironman">Iron Man</option>
       <option value="spiderman">Spider-Man</option>
+      <option value="notebook">Not Defteri</option>
     </select>
   </div>
 
-  <!-- KARAKTER (sol boşluk) -->
-  <div class="character" aria-hidden="true">
-    <!-- Iron Man kaskı -->
-    <svg class="char char-ironman" viewBox="0 0 200 280" xmlns="http://www.w3.org/2000/svg">
+  <!-- KÖŞE SÜSLEMELERİ (temaya göre) -->
+  <div class="deco" aria-hidden="true">
+    <!-- ===== IRON MAN ===== -->
+    <!-- Sol üst: kask -->
+    <svg class="deco-item im-mask-tl" viewBox="0 0 200 280" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <linearGradient id="im-gold" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stop-color="#ffe27a" />
-          <stop offset="0.5" stop-color="#f5c518" />
-          <stop offset="1" stop-color="#c9930a" />
+          <stop offset="0" stop-color="#ffe27a" /><stop offset="0.5" stop-color="#f5c518" /><stop offset="1" stop-color="#c9930a" />
         </linearGradient>
         <linearGradient id="im-red" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stop-color="#e62429" />
-          <stop offset="1" stop-color="#8e1518" />
+          <stop offset="0" stop-color="#e62429" /><stop offset="1" stop-color="#8e1518" />
         </linearGradient>
         <radialGradient id="im-eye" cx="0.5" cy="0.5" r="0.6">
-          <stop offset="0" stop-color="#ffffff" />
-          <stop offset="0.6" stop-color="#bfefff" />
-          <stop offset="1" stop-color="#5ad1ff" />
+          <stop offset="0" stop-color="#ffffff" /><stop offset="0.6" stop-color="#bfefff" /><stop offset="1" stop-color="#5ad1ff" />
         </radialGradient>
       </defs>
       <path d="M100 10 C152 10 178 52 178 116 C178 182 150 244 100 268 C50 244 22 182 22 116 C22 52 48 10 100 10 Z" fill="url(#im-red)" />
@@ -48,37 +44,127 @@
       <path d="M58 120 L92 108 L92 134 L62 142 Z" fill="url(#im-eye)" />
       <path d="M142 120 L108 108 L108 134 L138 142 Z" fill="url(#im-eye)" />
       <g stroke="#b8870a" stroke-width="3" stroke-linecap="round">
-        <line x1="84" y1="196" x2="116" y2="196" />
-        <line x1="86" y1="206" x2="114" y2="206" />
-        <line x1="90" y1="216" x2="110" y2="216" />
+        <line x1="84" y1="196" x2="116" y2="196" /><line x1="86" y1="206" x2="114" y2="206" /><line x1="90" y1="216" x2="110" y2="216" />
       </g>
     </svg>
 
-    <!-- Spider-Man maskesi -->
-    <svg class="char char-spiderman" viewBox="0 0 200 280" xmlns="http://www.w3.org/2000/svg">
+    <!-- Sağ üst: uçan Iron Man -->
+    <svg class="deco-item im-fly-tr" viewBox="0 0 140 200" xmlns="http://www.w3.org/2000/svg">
       <defs>
-        <linearGradient id="sp-red" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stop-color="#e3142b" />
-          <stop offset="1" stop-color="#9e0f1f" />
-        </linearGradient>
+        <linearGradient id="imf-red" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e62429" /><stop offset="1" stop-color="#9e1417" /></linearGradient>
+        <radialGradient id="imf-flame" cx="0.5" cy="0.2" r="0.8"><stop offset="0" stop-color="#bfefff" /><stop offset="0.5" stop-color="#5ad1ff" /><stop offset="1" stop-color="rgba(90,209,255,0)" /></radialGradient>
+      </defs>
+      <!-- itki alevleri -->
+      <g class="thrust">
+        <ellipse cx="48" cy="150" rx="9" ry="34" fill="url(#imf-flame)" />
+        <ellipse cx="92" cy="150" rx="9" ry="34" fill="url(#imf-flame)" />
+        <ellipse cx="40" cy="120" rx="7" ry="22" fill="url(#imf-flame)" />
+        <ellipse cx="100" cy="120" rx="7" ry="22" fill="url(#imf-flame)" />
+      </g>
+      <!-- bacaklar -->
+      <path d="M58 96 L52 150 L64 150 L68 100 Z" fill="url(#imf-red)" />
+      <path d="M82 96 L88 150 L76 150 L72 100 Z" fill="url(#imf-red)" />
+      <!-- gövde -->
+      <path d="M70 34 C92 34 98 54 96 84 C94 104 84 108 70 108 C56 108 46 104 44 84 C42 54 48 34 70 34 Z" fill="url(#imf-red)" />
+      <!-- altın göğüs + ark reaktörü -->
+      <path d="M58 56 L82 56 L78 86 L62 86 Z" fill="#f5c518" />
+      <circle cx="70" cy="68" r="8" fill="#bfefff" stroke="#5ad1ff" stroke-width="2" />
+      <!-- kollar geriye/yana -->
+      <path d="M48 60 L30 116 L40 120 L58 72 Z" fill="url(#imf-red)" />
+      <path d="M92 60 L110 116 L100 120 L82 72 Z" fill="url(#imf-red)" />
+      <circle cx="33" cy="118" r="7" fill="#bfefff" /><circle cx="107" cy="118" r="7" fill="#bfefff" />
+      <!-- kask -->
+      <path d="M70 6 C84 6 92 16 92 32 C92 46 82 56 70 56 C58 56 48 46 48 32 C48 16 56 6 70 6 Z" fill="#f5c518" />
+      <path d="M58 30 L66 26 L66 38 L60 40 Z" fill="#bfefff" /><path d="M82 30 L74 26 L74 38 L80 40 Z" fill="#bfefff" />
+    </svg>
+
+    <!-- Sağ alt: kask -->
+    <svg class="deco-item im-helmet-br" viewBox="0 0 200 280" xmlns="http://www.w3.org/2000/svg">
+      <path d="M100 10 C152 10 178 52 178 116 C178 182 150 244 100 268 C50 244 22 182 22 116 C22 52 48 10 100 10 Z" fill="url(#im-red)" />
+      <path d="M100 30 C140 30 156 70 156 120 C156 175 134 222 100 244 C66 222 44 175 44 120 C44 70 60 30 100 30 Z" fill="url(#im-gold)" />
+      <path d="M100 10 C112 10 122 14 130 22 L116 64 C110 60 100 60 100 60 C100 60 90 60 84 64 L70 22 C78 14 88 10 100 10 Z" fill="url(#im-red)" />
+      <path d="M96 70 L104 70 L102 150 L98 150 Z" fill="#d9a512" />
+      <path d="M58 120 L92 108 L92 134 L62 142 Z" fill="url(#im-eye)" />
+      <path d="M142 120 L108 108 L108 134 L138 142 Z" fill="url(#im-eye)" />
+      <g stroke="#b8870a" stroke-width="3" stroke-linecap="round">
+        <line x1="84" y1="196" x2="116" y2="196" /><line x1="86" y1="206" x2="114" y2="206" /><line x1="90" y1="216" x2="110" y2="216" />
+      </g>
+    </svg>
+
+    <!-- ===== SPIDER-MAN ===== -->
+    <!-- Sol üst: maske -->
+    <svg class="deco-item sp-mask-tl" viewBox="0 0 200 280" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="sp-red" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e3142b" /><stop offset="1" stop-color="#9e0f1f" /></linearGradient>
       </defs>
       <path d="M100 10 C156 10 182 56 182 122 C182 190 148 250 100 270 C52 250 18 190 18 122 C18 56 44 10 100 10 Z" fill="url(#sp-red)" />
       <g stroke="#6e0c16" stroke-width="1.4" fill="none" opacity="0.75" stroke-linecap="round">
-        <line x1="100" y1="6" x2="100" y2="270" />
-        <line x1="100" y1="20" x2="30" y2="120" />
-        <line x1="100" y1="20" x2="170" y2="120" />
-        <line x1="100" y1="20" x2="40" y2="210" />
-        <line x1="100" y1="20" x2="160" y2="210" />
-        <line x1="100" y1="20" x2="70" y2="255" />
-        <line x1="100" y1="20" x2="130" y2="255" />
-        <path d="M40 70 Q100 40 160 70" />
-        <path d="M30 120 Q100 80 170 120" />
-        <path d="M30 170 Q100 130 170 170" />
-        <path d="M40 215 Q100 180 160 215" />
-        <path d="M60 250 Q100 225 140 250" />
+        <line x1="100" y1="6" x2="100" y2="270" /><line x1="100" y1="20" x2="30" y2="120" /><line x1="100" y1="20" x2="170" y2="120" />
+        <line x1="100" y1="20" x2="40" y2="210" /><line x1="100" y1="20" x2="160" y2="210" /><line x1="100" y1="20" x2="70" y2="255" /><line x1="100" y1="20" x2="130" y2="255" />
+        <path d="M40 70 Q100 40 160 70" /><path d="M30 120 Q100 80 170 120" /><path d="M30 170 Q100 130 170 170" /><path d="M40 215 Q100 180 160 215" /><path d="M60 250 Q100 225 140 250" />
       </g>
       <path d="M84 112 C70 102 44 106 38 126 C34 140 52 152 70 148 C86 144 92 124 84 112 Z" fill="#fff" stroke="#111" stroke-width="3" />
       <path d="M116 112 C130 102 156 106 162 126 C166 140 148 152 130 148 C114 144 108 124 116 112 Z" fill="#fff" stroke="#111" stroke-width="3" />
+    </svg>
+
+    <!-- Sağ üst: ağdan sarkan Spider-Man -->
+    <svg class="deco-item sp-hang-tr" viewBox="0 0 120 320" xmlns="http://www.w3.org/2000/svg">
+      <!-- ağ ipi -->
+      <line x1="60" y1="0" x2="60" y2="80" stroke="#e8eef5" stroke-width="2" />
+      <!-- baş aşağı sarkan figür: kalça yukarıda (ipte), baş aşağıda -->
+      <g class="spidey">
+        <!-- bacaklar (yukarı, ipe tutunmuş) -->
+        <path d="M54 84 C40 96 38 120 48 140 L58 136 C52 118 54 100 60 92 Z" fill="#1f5fd0" />
+        <path d="M66 84 C80 96 82 120 72 140 L62 136 C68 118 66 100 60 92 Z" fill="#1f5fd0" />
+        <!-- gövde -->
+        <path d="M60 90 C76 90 84 110 84 150 C84 190 74 215 60 222 C46 215 36 190 36 150 C36 110 44 90 60 90 Z" fill="#e3142b" />
+        <!-- yan mavi -->
+        <path d="M40 150 C40 120 46 100 56 94 L56 220 C46 210 40 185 40 150 Z" fill="#1f5fd0" />
+        <path d="M80 150 C80 120 74 100 64 94 L64 220 C74 210 80 185 80 150 Z" fill="#1f5fd0" />
+        <!-- örümcek logosu -->
+        <path d="M60 120 L60 175 M48 135 L72 135 M50 150 L70 150 M52 165 L68 165" stroke="#111" stroke-width="2" fill="none" />
+        <!-- kollar aşağı sarkık -->
+        <path d="M44 150 C30 175 26 205 30 235 L40 232 C38 205 42 180 54 162 Z" fill="#e3142b" />
+        <path d="M76 150 C90 175 94 205 90 235 L80 232 C82 205 78 180 66 162 Z" fill="#e3142b" />
+        <!-- baş (aşağıda) -->
+        <path d="M60 218 C74 218 82 230 82 246 C82 264 72 278 60 282 C48 278 38 264 38 246 C38 230 46 218 60 218 Z" fill="#e3142b" />
+        <g stroke="#6e0c16" stroke-width="1" fill="none" opacity="0.7">
+          <line x1="60" y1="216" x2="60" y2="282" /><line x1="42" y1="232" x2="78" y2="232" /><line x1="40" y1="250" x2="80" y2="250" />
+        </g>
+        <!-- gözler (baş aşağı) -->
+        <path d="M52 244 C46 238 36 240 34 250 C33 257 42 262 50 258 C56 255 56 248 52 244 Z" fill="#fff" stroke="#111" stroke-width="2" />
+        <path d="M68 244 C74 238 84 240 86 250 C87 257 78 262 70 258 C64 255 64 248 68 244 Z" fill="#fff" stroke="#111" stroke-width="2" />
+      </g>
+    </svg>
+
+    <!-- Sol alt: örümcek -->
+    <svg class="deco-item sp-spider-bl" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+      <line x1="60" y1="0" x2="60" y2="40" stroke="#e8eef5" stroke-width="1.5" />
+      <g stroke="#111" stroke-width="3" fill="none" stroke-linecap="round">
+        <path d="M52 56 C36 44 26 48 16 40" /><path d="M52 64 C34 60 24 66 12 64" /><path d="M52 72 C34 80 24 84 14 92" /><path d="M52 80 C38 92 30 100 24 110" />
+        <path d="M68 56 C84 44 94 48 104 40" /><path d="M68 64 C86 60 96 66 108 64" /><path d="M68 72 C86 80 96 84 106 92" /><path d="M68 80 C82 92 90 100 96 110" />
+      </g>
+      <ellipse cx="60" cy="70" rx="13" ry="18" fill="#111" />
+      <circle cx="60" cy="48" r="8" fill="#111" />
+      <circle cx="56" cy="46" r="2" fill="#e3142b" /><circle cx="64" cy="46" r="2" fill="#e3142b" />
+    </svg>
+
+    <!-- ===== NOT DEFTERİ ===== -->
+    <!-- Sağ üst: kalem -->
+    <svg class="deco-item nb-pencil-tr" viewBox="0 0 60 220" xmlns="http://www.w3.org/2000/svg">
+      <rect x="20" y="30" width="20" height="150" fill="#f4c542" stroke="#c79a1e" stroke-width="1.5" />
+      <rect x="20" y="30" width="20" height="150" fill="url(#nbp)" opacity="0.0" />
+      <polygon points="20,180 40,180 30,205" fill="#e8c99a" />
+      <polygon points="26,196 34,196 30,205" fill="#3a3a3a" />
+      <rect x="20" y="12" width="20" height="18" fill="#ff7d8a" />
+      <rect x="20" y="8" width="20" height="6" fill="#cfcfcf" />
+      <line x1="27" y1="30" x2="27" y2="180" stroke="#d9ab2a" stroke-width="1" />
+      <line x1="33" y1="30" x2="33" y2="180" stroke="#d9ab2a" stroke-width="1" />
+    </svg>
+    <!-- Sol üst: ataç -->
+    <svg class="deco-item nb-clip-tl" viewBox="0 0 80 160" xmlns="http://www.w3.org/2000/svg">
+      <path d="M30 20 L30 120 C30 140 56 140 56 120 L56 40 C56 28 40 28 40 40 L40 110"
+            fill="none" stroke="#9aa3b2" stroke-width="6" stroke-linecap="round" />
     </svg>
   </div>
 
@@ -106,6 +192,10 @@
     <form id="todo-form" class="todo-form">
       <input type="text" id="todo-input" placeholder="Yeni görev ekle..." autocomplete="off" />
       <button type="submit" aria-label="Ekle">+</button>
+      <label class="due-field">
+        <span>⏰ Son tarih (isteğe bağlı)</span>
+        <input type="datetime-local" id="due-input" class="due-input" />
+      </label>
     </form>
 
     <div class="filters" id="filters">
@@ -122,6 +212,6 @@
     </footer>
   </main>
 
-  <script src="app.js?v=5"></script>
+  <script src="app.js?v=6"></script>
 </body>
 </html>

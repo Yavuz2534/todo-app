@@ -119,6 +119,7 @@ const list = document.getElementById("todo-list");
 const countEl = document.getElementById("count");
 const clearBtn = document.getElementById("clear-done");
 const filters = document.getElementById("filters");
+const dueInput = document.getElementById("due-input");
 
 // --- Tema seçici ---
 const themeSelect = document.getElementById("theme-select");
@@ -186,15 +187,28 @@ function render() {
   visible.forEach((todo) => {
     const li = document.createElement("li");
     li.className = "todo-item" + (todo.done ? " done" : "");
+    li.dataset.id = todo.id;
+    li.dataset.due = todo.due_at || "";
+    li.dataset.done = todo.done ? "1" : "";
 
     const checkbox = document.createElement("input");
     checkbox.type = "checkbox";
     checkbox.checked = todo.done;
     checkbox.addEventListener("change", () => toggle(todo));
 
+    const main = document.createElement("div");
+    main.className = "todo-main";
+
     const span = document.createElement("span");
     span.className = "text";
     span.textContent = todo.text;
+    main.appendChild(span);
+
+    if (todo.due_at) {
+      const due = document.createElement("span");
+      due.className = "due";
+      main.appendChild(due);
+    }
 
     const del = document.createElement("button");
     del.className = "delete";
@@ -202,17 +216,50 @@ function render() {
     del.setAttribute("aria-label", "Sil");
     del.addEventListener("click", () => remove(todo.id));
 
-    li.append(checkbox, span, del);
+    li.append(checkbox, main, del);
     list.appendChild(li);
   });
 
   const remaining = todos.filter((t) => !t.done).length;
   countEl.textContent = `${remaining} görev kaldı`;
+  updateUrgency();
 }
 
-async function addTodo(text) {
+// Kalan süreyi metne çevir
+function formatRemaining(ms) {
+  if (ms < 0) return "⏰ Süresi geçti";
+  const min = Math.round(ms / 60000);
+  if (min < 60) return `⏰ ${min} dk kaldı`;
+  const hr = Math.round(min / 60);
+  if (hr < 24) return `⏰ ${hr} saat kaldı`;
+  const day = Math.round(hr / 24);
+  return `⏰ ${day} gün kaldı`;
+}
+
+// Kalan süre etiketlerini ve "acil" (kırmızı yanıp sönme) durumunu güncelle.
+// Tam yeniden çizim yapmaz; sadece zaman ve sınıfı tazeler.
+function updateUrgency() {
+  const now = Date.now();
+  const URGENT_MS = 60 * 60 * 1000; // son 1 saat veya geçmiş → acil
+  document.querySelectorAll(".todo-item[data-id]").forEach((li) => {
+    const dueStr = li.dataset.due;
+    const dueEl = li.querySelector(".due");
+    if (!dueStr || !dueEl) return;
+    const diff = new Date(dueStr).getTime() - now;
+    dueEl.textContent = formatRemaining(diff);
+    const urgent = !li.dataset.done && diff <= URGENT_MS;
+    li.classList.toggle("urgent", urgent);
+  });
+}
+
+// Zaman ilerledikçe etiketleri/yanıp sönmeyi tazele
+setInterval(updateUrgency, 20000);
+
+async function addTodo(text, dueIso) {
   try {
-    const rows = await api("POST", "", { text }, true); // user_id otomatik (auth.uid())
+    const body = { text };
+    if (dueIso) body.due_at = dueIso; // isteğe bağlı son tarih
+    const rows = await api("POST", "", body, true); // user_id otomatik (auth.uid())
     todos.push(rows[0]);
     render();
   } catch (e) {
@@ -288,9 +335,12 @@ form.addEventListener("submit", (e) => {
   e.preventDefault();
   const text = input.value.trim();
   if (!text) return;
+  // datetime-local yerel saat verir; ISO'ya çevirip kaydediyoruz
+  const dueIso = dueInput.value ? new Date(dueInput.value).toISOString() : null;
   input.value = "";
+  dueInput.value = "";
   input.focus();
-  addTodo(text);
+  addTodo(text, dueIso);
 });
 
 clearBtn.addEventListener("click", clearDone);
